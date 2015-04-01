@@ -174,7 +174,7 @@ class ModuleObject extends MasterObject {
 			$rets = jlogic ( 'image' )->upload ( $p );
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
-				$imageid += max ( 0, ( int ) $rets ['id'] );
+				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
 			}			
 		}
 		if ($_FILES ['pic5']) {
@@ -182,7 +182,7 @@ class ModuleObject extends MasterObject {
 			$rets = jlogic ( 'image' )->upload ( $p );
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
-				$imageid += max ( 0, ( int ) $rets ['id'] );
+				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
 			}			
 		}
 		if ($_FILES ['pic6']) {
@@ -190,7 +190,7 @@ class ModuleObject extends MasterObject {
 			$rets = jlogic ( 'image' )->upload ( $p );
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
-				$imageid += max ( 0, ( int ) $rets ['id'] );
+				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
 			}			
 		}
 		if ($_FILES ['pic7']) {
@@ -198,7 +198,7 @@ class ModuleObject extends MasterObject {
 			$rets = jlogic ( 'image' )->upload ( $p );
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
-				$imageid += max ( 0, ( int ) $rets ['id'] );
+				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
 			}			
 		}
 		if ($_FILES ['pic8']) {
@@ -206,7 +206,7 @@ class ModuleObject extends MasterObject {
 			$rets = jlogic ( 'image' )->upload ( $p );
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
-				$imageid += max ( 0, ( int ) $rets ['id'] );
+				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
 			}			
 		}
 
