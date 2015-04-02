@@ -54,6 +54,11 @@ class ModuleObject extends MasterObject {
 					$this->dig ();
 					break;
 				}
+			case 'undig' :
+				{
+					$this->undig ();
+					break;
+				}
 			case 'isdig' :
 				{
 					$this->isdig ();
@@ -143,15 +148,15 @@ class ModuleObject extends MasterObject {
 			$rets = jlogic ( 'image' )->upload ( $p );
 			if (! $rets ['error']) {
 				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
-			}			
-		} 
+			}
+		}
 		if ($_FILES ['pic1']) {
 			$p ['pic_field'] = 'pic1';
 			$rets = jlogic ( 'image' )->upload ( $p );
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
 				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
-			}			
+			}
 		}
 		if ($_FILES ['pic2']) {
 			$p ['pic_field'] = 'pic2';
@@ -159,7 +164,7 @@ class ModuleObject extends MasterObject {
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
 				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
-			}			
+			}
 		}
 		if ($_FILES ['pic3']) {
 			$p ['pic_field'] = 'pic3';
@@ -167,7 +172,7 @@ class ModuleObject extends MasterObject {
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
 				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
-			}			
+			}
 		}
 		if ($_FILES ['pic4']) {
 			$p ['pic_field'] = 'pic4';
@@ -175,7 +180,7 @@ class ModuleObject extends MasterObject {
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
 				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
-			}			
+			}
 		}
 		if ($_FILES ['pic5']) {
 			$p ['pic_field'] = 'pic5';
@@ -183,7 +188,7 @@ class ModuleObject extends MasterObject {
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
 				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
-			}			
+			}
 		}
 		if ($_FILES ['pic6']) {
 			$p ['pic_field'] = 'pic6';
@@ -191,7 +196,7 @@ class ModuleObject extends MasterObject {
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
 				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
-			}			
+			}
 		}
 		if ($_FILES ['pic7']) {
 			$p ['pic_field'] = 'pic7';
@@ -199,7 +204,7 @@ class ModuleObject extends MasterObject {
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
 				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
-			}			
+			}
 		}
 		if ($_FILES ['pic8']) {
 			$p ['pic_field'] = 'pic8';
@@ -207,9 +212,9 @@ class ModuleObject extends MasterObject {
 			if (! $rets ['error']) {
 				$imageid = $imageid . ",";
 				$imageid = $imageid . max ( 0, ( int ) $rets ['id'] );
-			}			
+			}
 		}
-
+		
 		$datas = array (
 				'content' => $content,
 				'totid' => $totid,
@@ -378,8 +383,32 @@ class ModuleObject extends MasterObject {
 		);
 		DB::insert ( 'topic_dig', $ary, true );
 		jtable ( 'topic' )->update_digcounts ( $tid );
-		update_credits_by_action ( 'topic_dig', MEMBER_ID );
-		update_credits_by_action ( 'my_dig', $uid );
+		// update_credits_by_action ( 'topic_dig', MEMBER_ID );
+		// update_credits_by_action ( 'my_dig', $uid );
+		api_output ( 1 );
+	}
+	function undig() {
+		$tid = max ( 0, ( int ) $this->Inputs ['tid'] );
+		if (! $tid) {
+			api_error ( 'tid is empty', 1001 );
+		}
+		$topic = $this->_topic ( $tid );
+		if (! $topic) {
+			api_error ( 'tid is invalid', 1002 );
+		}
+		$count = DB::result_first ( "SELECT COUNT(*) FROM " . DB::table ( 'topic_dig' ) . " WHERE tid='{$tid}' AND uid = '" . MEMBER_ID . "'" );
+		if (! ($count > 0)) {
+			api_error ( 'you have not diged this topic', 1003 );
+		}
+		$uid = $topic ['uid'];
+		if ($uid == MEMBER_ID) {
+			api_error ( 'you do not pemission to dig your topic', 1004 );
+		}
+		jtable ( 'topic_more' )->update_diguids ( $tid, "-1" );
+		DB::query ( "update `" . DB::table ( 'members' ) . "` set `digcount` = digcount - 1,`dig_new` = dig_new - 1 where `uid`='{$uid}'" );
+		// DB::insert ( 'topic_dig', $ary, true );
+		DB::delete ( 'topic_dig', "tid='{$tid}' AND uid = '" . MEMBER_ID . "'" );
+		jtable ( 'topic' )->update_digcounts ( $tid, "-1" );
 		api_output ( 1 );
 	}
 	function mydig() {
