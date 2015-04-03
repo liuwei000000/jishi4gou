@@ -386,7 +386,7 @@ class ModuleObject extends MasterObject {
 		// update_credits_by_action ( 'topic_dig', MEMBER_ID );
 		// update_credits_by_action ( 'my_dig', $uid );
 		api_output ( array (
-			'digcounts' => $topic ['digcounts'],
+			'digcounts' => $topic ['digcounts'] + 1,
 			'isdig' => "1" 
 		) );
 	}
@@ -413,7 +413,7 @@ class ModuleObject extends MasterObject {
 		DB::delete ( 'topic_dig', "tid='{$tid}' AND uid = '" . MEMBER_ID . "'" );
 		jtable ( 'topic' )->update_digcounts ( $tid, "-1" );
 		api_output ( array (
-			'digcounts' => $topic ['digcounts'],
+			'digcounts' => $topic ['digcounts'] - 1,
 			'isdig' => "1" 
 		) );
 	}
