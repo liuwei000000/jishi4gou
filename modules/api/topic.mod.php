@@ -385,7 +385,10 @@ class ModuleObject extends MasterObject {
 		jtable ( 'topic' )->update_digcounts ( $tid );
 		// update_credits_by_action ( 'topic_dig', MEMBER_ID );
 		// update_credits_by_action ( 'my_dig', $uid );
-		api_output ( 1 );
+		api_output ( array (
+			'digcounts' => $topic ['digcounts'],
+			'isdig' => "1" 
+		) );
 	}
 	function undig() {
 		$tid = max ( 0, ( int ) $this->Inputs ['tid'] );
@@ -409,7 +412,10 @@ class ModuleObject extends MasterObject {
 		// DB::insert ( 'topic_dig', $ary, true );
 		DB::delete ( 'topic_dig', "tid='{$tid}' AND uid = '" . MEMBER_ID . "'" );
 		jtable ( 'topic' )->update_digcounts ( $tid, "-1" );
-		api_output ( 1 );
+		api_output ( array (
+			'digcounts' => $topic ['digcounts'],
+			'isdig' => "1" 
+		) );
 	}
 	function mydig() {
 		$uid = max ( 0, ( int ) $this->Inputs ['uid'] );
